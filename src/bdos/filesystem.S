@@ -249,7 +249,9 @@ zproc convert_user_fcb
     lda current_user
     sta (param), y              ; update FCB
 
-    jmp select_active_drive
+    jsr internal_LOGINDRIVE
+    clc
+    rts
 zendproc
 
 ; --- Close a file (flush the FCB to disk) ----------------------------------
