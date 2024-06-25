@@ -408,7 +408,7 @@ zproc entry_DIR
     ldx #>userfcb
     jsr bdos_FINDFIRST
     zif_cs
-        jmp newline
+        jmp restore_drive
     zendif
 
     zrepeat
@@ -477,6 +477,9 @@ zproc entry_DIR
         ldx #>userfcb
         jsr bdos_FINDNEXT
     zuntil_cs
+restore_drive:
+    lda drive
+    jsr bdos_SELECTDISK
     jmp newline
 
 ; Prints A bytes at 'temp', followed by a space.

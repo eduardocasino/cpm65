@@ -1309,6 +1309,7 @@ zendproc
 zproc bdos_LOGINDRIVE
     lda param+0
     sta current_drive       ; Set the current drive variable
+    sta active_drive        ; Set the active drive variable as well
 zendproc
 zproc internal_LOGINDRIVE
     ; Select the drive.
