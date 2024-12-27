@@ -56,6 +56,14 @@ llvmclibrary(
     name="k-1013", srcs=["./k-1013.S"], cflags=["-I ."], deps=["include"]
 )
 
+llvmclibrary(
+    name="pario", srcs=["./pario.S"], cflags=["-I ."], deps=["include"]
+)
+
+llvmclibrary(
+    name="sdshield", srcs=["./sdshield.S"], cflags=["-I ."], deps=["include"]
+)
+
 llvmrawprogram(
     name="bios-k1013",
     srcs=["./kim-1-k1013.S"],
@@ -85,6 +93,13 @@ llvmrawprogram(
     linkscript="./kim-1-iec.ld",
 )
 
+llvmrawprogram(
+    name="bios-sdshield",
+    srcs=["./kim-1-sdshield.S"],
+    deps=["./kim-1.S", "./kim-1.inc", "./parproto.inc", "include", "src/lib+bioslib", ".+pario", ".+sdshield"],
+    linkscript="./kim-1-sdcard.ld",
+)
+
 mkcpmfs(
     name="rawdiskimage-k1013",
     format="k-1013",
@@ -104,6 +119,20 @@ mkcpmfs(
     format="sdcard",
     bootimage=".+bios-sdcard",
     size=512 * 4096 * 16,
+    items={"0:ccp.sys@sr": "src+ccp", "0:bdos.sys@sr": "src/bdos"}
+    | {"0:pasc.pas": "third_party/pascal-m+pasc_pas_cpm"}
+    | MINIMAL_APPS
+    | MINIMAL_APPS_SRCS
+    | BIG_APPS
+    | BIG_APPS_SRCS
+    | PASCAL_APPS,
+)
+
+mkcpmfs(
+    name="rawdiskimage-sdshield",
+    format="k-1013",
+    bootimage=".+bios-sdshield",
+    size=256 * 77 * 26,
     items={"0:ccp.sys@sr": "src+ccp", "0:bdos.sys@sr": "src/bdos"}
     | {"0:pasc.pas": "third_party/pascal-m+pasc_pas_cpm"}
     | MINIMAL_APPS
@@ -169,5 +198,15 @@ zip(
         "bootiec-kim.pap": "src/arch/kim-1/boot+bootiec-kim.pap",
         "bootiec-pal.bin": "src/arch/kim-1/boot+bootiec-pal.bin",
         "bootiec-pal.pap": "src/arch/kim-1/boot+bootiec-pal.pap",
+    },
+)
+
+zip(
+    name="distro-sdshield",
+    items={
+        "diskimage.dsk": ".+rawdiskimage-sdshield",
+        "bootsdshield.bin": "src/arch/kim-1/boot+bootsdshield.bin",
+        "bootsdshield.pap": "src/arch/kim-1/boot+bootsdshield.pap",
+        "bootsdshield-kimrom.bin": "src/arch/kim-1/boot+bootsdshield-kimrom.bin",
     },
 )
