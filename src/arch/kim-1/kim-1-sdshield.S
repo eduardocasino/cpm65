@@ -31,7 +31,7 @@ zproc system_init, loader
     lda #>DISK_BUFFER
     sta zp_sds_buffer+1
 
-    lda #SECTORS_PER_TRACK
+    lda #SECTORS_PER_TRACK/2            ; Host sectors are 256 bytes
     sta zp_sds_spt
 
     ; Determine RAM size. Assumes at least a memory expansion from 0x2000 to 0x9fff
