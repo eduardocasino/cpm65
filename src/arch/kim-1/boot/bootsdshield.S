@@ -119,7 +119,7 @@ ram_start:
     sta zp_sds_drive
     sta zp_sds_track
     sta zp_sds_sector
-    lda #52                         ; Sectors per track
+    lda #26                         ; Sectors per track
     sta zp_sds_spt
 
     ldx #8
