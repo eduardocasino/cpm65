@@ -115,9 +115,9 @@ zproc DiskWriteSector, .text.DiskWriteSector
     ldy #0
     zrepeat
         lda (zp_sds_buffer),y
-        jsr    xParWriteByte
+        jsr xParWriteByte
         iny
-    zuntil_eq    
+    zuntil_eq
 ;
 ; Now get response.
 ;
@@ -125,7 +125,6 @@ zproc DiskWriteSector, .text.DiskWriteSector
     jsr xParReadByte
     cmp #PR_NAK             ;NAK?
     beq DiskCerror
-
     jsr xParSetWrite
     clc                     ;clear error indicator
     rts

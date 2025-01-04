@@ -7,20 +7,12 @@
 #include "zif.inc"
 #include "cpm65.inc"
 
-#include "kim-1.S"
-
 #define SECTORS_PER_TRACK 52
 
 .section loader, "ax"
 
-    ; System init
-
+.global system_init
 zproc system_init, loader
-    lda #0
-    sta current_drive
-    sta pending_key
-    sta buffer_dirty
-
     lda #0xff
     sta buffered_host_sector            ; Mark buffer data as invalid
 
@@ -64,9 +56,30 @@ zproc system_init, loader
     sta mem_end
 
     rts
-zendproc
 
 .text
+
+; Select a disk.
+; A is the disk number.
+; Returns the DPH in XA.
+; Sets carry on error.
+
+zproc bios_SELDSK
+    cmp #dphtab_end-dphtab
+    zif_cs
+        sec                 ; invalid drive
+        rts
+    zendif
+
+    sta current_drive
+
+    asl a
+    tay
+    lda dphtab+0, y
+    ldx dphtab+1, y
+    clc
+    rts
+zendproc
 
 ; Set the current absolute sector number.
 ; XA is a pointer to a three-byte number.
@@ -215,14 +228,24 @@ zendproc
 
 ; --- Data ------------------------------------------------------------------
 
-.data
+.data 
 
-; DPH for drive 0
+dphtab:
+    .word dph_floppyA
+    .word dph_floppyB
+    .word dph_floppyC
+    .word dph_floppyD
+dphtab_end:
 
-define_drive dph0, 77*52, 2048, 128, 52
+define_drive dph_floppyA, 77*SECTORS_PER_TRACK, 2048, 128, SECTORS_PER_TRACK
+define_drive dph_floppyB, 77*SECTORS_PER_TRACK, 2048, 128, SECTORS_PER_TRACK
+define_drive dph_floppyC, 77*SECTORS_PER_TRACK, 2048, 128, SECTORS_PER_TRACK
+define_drive dph_floppyD, 77*SECTORS_PER_TRACK, 2048, 128, SECTORS_PER_TRACK
 
 .bss
 
+current_drive:          .fill 1     ; Current selected disk drive number
+buffer_offset:          .fill 1     ; Offset of CP/M sector into host sector buffer
 requested_cpm_sector:   .fill 1     ; CP/M sector requested by user
 requested_track:        .fill 1     ; track requested by user
 buffered_host_sector:   .fill 1     ; host sector in buffer

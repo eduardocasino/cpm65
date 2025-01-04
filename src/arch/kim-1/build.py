@@ -64,39 +64,55 @@ llvmclibrary(
     name="sdshield", srcs=["./sdshield.S"], cflags=["-I ."], deps=["include"]
 )
 
+llvmclibrary(
+    name="kim-1-k1013", srcs=["./kim-1-k1013.S"], cflags=["-I ."], deps=["include", ".+k-1013"]
+)
+
+llvmclibrary(
+    name="kim-1-sdcard", srcs=["./kim-1-sdcard.S"], cflags=["-I ."], deps=["include", ".+libsd"]
+)
+
+llvmclibrary(
+    name="kim-1-iec", srcs=["./kim-1-iec.S"], cflags=["-I ."], deps=["include"]
+)
+
+llvmclibrary(
+    name="kim-1-sdshield", srcs=["./kim-1-sdshield.S"], cflags=["-I ."], deps=["include", ".+pario", ".+sdshield"]
+)
+
 llvmrawprogram(
     name="bios-k1013",
-    srcs=["./kim-1-k1013.S"],
-    deps=["./kim-1.S", "./kim-1.inc", "include", "src/lib+bioslib", ".+k-1013"],
+    srcs=["./kim-1.S"],
+    deps=["./kim-1.inc", "include", "src/lib+bioslib", ".+kim-1-k1013"],
     linkscript="./kim-1-k1013.ld",
 )
 
 llvmrawprogram(
     name="bios-sdcard",
-    srcs=["./kim-1-sdcard.S"],
-    deps=["./kim-1.S", "./kim-1.inc", "include", "src/lib+bioslib", ".+libsd"],
+    srcs=["./kim-1.S"],
+    deps=["./kim-1.inc", "include", "src/lib+bioslib", ".+kim-1-sdcard"],
     linkscript="./kim-1-sdcard.ld",
 )
 
 llvmrawprogram(
     name="bios-iec-kim",
-    srcs=["./kim-1-iec.S"],
-    deps=["./kim-1.S", "./kim-1.inc", "include", "src/lib+bioslib"],
+    srcs=["./kim-1.S"],
+    deps=[  "./kim-1.inc", "include", "src/lib+bioslib", ".+kim-1-iec"],
     linkscript="./kim-1-iec.ld",
 )
 
 llvmrawprogram(
     name="bios-iec-pal",
-    srcs=["./kim-1-iec.S"],
+    srcs=["./kim-1.S"],
     cflags=["-DPAL_1"],
-    deps=["./kim-1.S", "./kim-1.inc", "include", "src/lib+bioslib"],
+    deps=["./kim-1.inc", "include", "src/lib+bioslib", ".+kim-1-iec"],
     linkscript="./kim-1-iec.ld",
 )
 
 llvmrawprogram(
     name="bios-sdshield",
-    srcs=["./kim-1-sdshield.S"],
-    deps=["./kim-1.S", "./kim-1.inc", "./parproto.inc", "include", "src/lib+bioslib", ".+pario", ".+sdshield"],
+    srcs=["./kim-1.S"],
+    deps=["./kim-1.inc", "./parproto.inc", "include", "src/lib+bioslib", ".+kim-1-sdshield"],
     linkscript="./kim-1-sdcard.ld",
 )
 
