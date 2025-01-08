@@ -47,6 +47,19 @@ llvmrawprogram(
     linkscript="./boot.ld",
 )
 
+llvmrawprogram(
+    name="bootsdshield.bin",
+    srcs=["./bootsdshield.S"],
+    linkscript="./boot.ld",
+)
+
+llvmrawprogram(
+    name="bootsdshield-kimrom.bin",
+    srcs=["./bootsdshield.S"],
+    cflags=["-DKIM_ROM"],
+    linkscript="./boot-kimrom.ld",
+)
+
 mkpap(name="boot.pap", src=".+boot.bin")
 
 mkpap(name="bootsd.pap", src=".+bootsd.bin")
@@ -54,3 +67,5 @@ mkpap(name="bootsd.pap", src=".+bootsd.bin")
 mkpap(name="bootiec-kim.pap", src=".+bootiec-kim.bin")
 
 mkpap(name="bootiec-pal.pap", src=".+bootiec-pal.bin")
+
+mkpap(name="bootsdshield.pap", src=".+bootsdshield.bin")
