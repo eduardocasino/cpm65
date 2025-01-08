@@ -35,14 +35,18 @@ zproc system_init, loader
 ; Sets carry on error.
 
 zproc bios_SELDSK
-    cmp #0
-    zif_ne
+    cmp #dphtab_end-dphtab
+    zif_cs
         sec                 ; invalid drive
         rts
     zendif
 
-    lda #<dph0
-    ldx #>dph0
+    sta current_drive
+
+    asl a
+    tay
+    lda dphtab+0, y
+    ldx dphtab+1, y
     clc
     rts
 zendproc
@@ -237,9 +241,17 @@ zendproc
 
 .data
 
-; DPH for drive 0
+dphtab:
+    .word dph0
+    .word dph1
+    .word dph2
+    .word dph3
+dphtab_end:
 
 define_drive dph0, 77*52, 2048, 128, 52
+define_drive dph1, 77*52, 2048, 128, 52
+define_drive dph2, 77*52, 2048, 128, 52
+define_drive dph3, 77*52, 2048, 128, 52
 
 .bss
 
