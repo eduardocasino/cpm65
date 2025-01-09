@@ -6,13 +6,7 @@
 
 #include "zif.inc"
 #include "kim-1.inc"
-
-; K-1013 FDC registers
-
-HSRC = 0xffe8           ; R/W   - K-1003 Hardware Status Register
-ADMA = 0xffea           ; Write - K-1013 Set DMA Address Register
-MSTR = 0xffee           ; Read  - NEC-765 Main Status Register
-DATR = 0xffef           ; R/W   - NEC-765 Data Register
+#include "k-1013.inc"
 
 ; Drive in Y
 
@@ -57,7 +51,7 @@ zproc fdc_exec_seek, .text.fdc_exec_seek
     zendif
     ; Fallthrough
 zendproc
-zproc fdc_exec_senseint, .text.fdc_exec_senseint, local
+zproc fdc_exec_senseint, .text.fdc_exec_senseint
     ; Wait until FDC interrupt
 
 1:  lda HSRC
@@ -146,7 +140,7 @@ zproc fdc_exec_rw, .text.fdc_exec_rw, local
     ; Bit 7 and 6: 11  ->  Upper half of system RAM, sys. RAM starts in even boundary
     ; Bits 5-0: Bits 11-6 of the buffer address
 
-    lda #$f8
+    lda #BUFFER_DMA
     sta ADMA
 
     ; Read/Write data into/from disk buffer
@@ -192,6 +186,51 @@ zendproc
 zproc fdc_fail, .text.fdc_fail, local
     sec
     rts
+zendproc
+
+; Format track
+; Drive in Y, track data in area pointed by ADMA
+
+zproc fdc_exec_format, .text.fdc_exec_format
+
+    sty fdc_format+2              ; Put drive in second byte of command
+
+    lda #BUFFER_DMA
+    sta ADMA
+
+    ldx #fdc_format-fdc_commands  ; Command index into X
+    jsr fdc_exec_command
+    zif_cs
+        rts
+    zendif
+
+    ; Wait until IRQ from FDC
+
+1:  lda HSRC            ; Wait until IRQ from FDC
+    bmi 1b
+
+    ; Read results into memory
+
+    jsr fdc_read_result
+    zif_cs
+        rts
+    zendif
+
+    ; Look for error in the status registers
+
+    lda disk_status     ; Check ST0
+    and #0xd8           ; Delete don't care bits
+    bne fdc_fail        ; Error if any remainder set
+    lda disk_status+1   ; Check ST1
+    and #0x35           ; Delete don't care bits
+    bne fdc_fail        ; Error if any remainder set
+    lda disk_status+2   ; Check ST2
+    and #0x33           ; Mask out non-error bits
+    bne fdc_fail        ; Error if any remainder set
+
+    clc
+    rts
+
 zendproc
 
 ; Command index in X
@@ -272,6 +311,15 @@ fdc_rw:
     .byte 0             ; EOT: Last sector to read
     .byte 0xe           ; GPL: Gap length for 26 sectors, 256 bytes/sect
     .byte 0xff          ; DTL: Data length = 0xff since N is non-zero
+
+fdc_format:
+    .byte 6             ; Command length
+    .byte 0x4d          ; Format a double density track command
+    .byte 0             ; Drive number in bits 0-1, side number in bit 2
+    .byte 1             ; Specify 256 bytes/sector
+    .byte 0x1a          ; Specify 26 sectors/track
+    .byte 0x36          ; Gap length for 26 sectors, 256 bytes/sect
+    .byte 0xe5          ; Data field filler byte
 
 .bss
 

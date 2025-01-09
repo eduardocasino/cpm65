@@ -53,7 +53,7 @@ llvmclibrary(
 )
 
 llvmclibrary(
-    name="k-1013", srcs=["./k-1013.S"], cflags=["-I ."], deps=["include"]
+    name="k-1013", srcs=["./k-1013.S"], cflags=["-I ."], deps=["include", "./k-1013.inc"]
 )
 
 llvmclibrary(
@@ -104,6 +104,7 @@ mkcpmfs(
     size=256 * 77 * 26,
     items={
         "0:ccp.sys@sr": "src+ccp", "0:bdos.sys@sr": "src/bdos",
+        "0:format.com": "src/arch/kim-1/utils+format",
         "0:pasc.pas": "third_party/pascal-m+pasc_pas_cpm",
     }
     | MINIMAL_APPS
