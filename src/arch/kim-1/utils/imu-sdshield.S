@@ -45,7 +45,7 @@ zproc init
     iny
 1:  stx buffer1+0
     stx buffer2+0
-    sty buffer2+1
+    sty buffer1+1
     iny
     sty buffer2+1
 
