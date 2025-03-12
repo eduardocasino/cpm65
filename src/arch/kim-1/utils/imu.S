@@ -17,7 +17,7 @@ DMA_AREA = $f4              ; buffer ($fd00), which encodes to $f4. See K-1013 m
 
 ZEROPAGE
 
-    .global string, buffer1, buffer2, filename1, filename2
+    .global string, buffer1, filename1, filename2
 
 string:         .fill 2             ; Pointer for file name operations
 buffer1:        .fill 2             ; Read/Write buffer for disk operations
