@@ -41,6 +41,7 @@ zproc init
     ldy #>cpm_ram
     ldx #<cpm_ram
     beq 1f
+    ldx #0
     iny
 1:  stx buffer1+0
     stx buffer2+0
