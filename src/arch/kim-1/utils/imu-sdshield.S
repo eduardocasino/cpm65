@@ -577,24 +577,24 @@ zendproc
 
     .global usage_msg
 
-usage_msg:      .ascii "Usage: imu [{/L | /S}]\n\r"
-                .ascii "       imu /M <drive> [/O]\n\r"
-                .ascii "       imu /U <drive>\n\r"
-                .ascii "       imu {/N | /D} <image>\n\r"
-                .ascii "       imu {/C | /R} <src image> <dst image>\n\r\n\r"
+usage_msg:      .ascii "Usage: imu [{/L | /S}]\r\n"
+                .ascii "       imu /M <drive> [/O]\r\n"
+                .ascii "       imu /U <drive>\r\n"
+                .ascii "       imu {/N | /D} <image>\r\n"
+                .ascii "       imu {/C | /R} <src image> <dst image>\r\n\r\n"
                 .byte 0
 
 firmware_msg:   .ascii "Error: '/"
 firmware_opt:   .byte 0
-                .ascii "' unsupported.\n\r"
-firmware_msg2:  .ascii "Please upgrade the SD Shield firmware to version >= 2.0\n\r"
+                .ascii "' unsupported.\r\n"
+firmware_msg2:  .ascii "Please upgrade the SD Shield firmware to version >= 2.0\r\n"
                 .byte 0
 
-imagerr_msg:    .ascii "Image name must be in 8.3 format.\n\r"
+imagerr_msg:    .ascii "Image name must be in 8.3 format.\r\n"
                 .byte 0
 
-disabled_msg:   .ascii "Disabled by hardware. Please flip option switch 2.\n\r"
+disabled_msg:   .ascii "Disabled by hardware. Please flip option switch 2.\r\n"
                 .byte 0
 
-config_msg:     .ascii "Can't update the SD config file.\n\r"
+config_msg:     .ascii "Can't update the SD config file.\r\n"
                 .byte 0

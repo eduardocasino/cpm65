@@ -516,34 +516,34 @@ mount_msg:      .byte 0
                 .ascii ": -> "
                 .byte 0
 
-ro_msg:         .ascii "  (RO)\n\r"
+ro_msg:         .ascii "  (RO)\r\n"
                 .byte 0
 
 notfound_msg:   .ascii "Error: File '"
                 .byte 0
-notfound2_msg:  .ascii "' not found.\n\r"
+notfound2_msg:  .ascii "' not found.\r\n"
                 .byte 0
 
-generic_msg:    .ascii "Can't complete operation.\n\r"
+generic_msg:    .ascii "Can't complete operation.\r\n"
                 .byte 0
                 
-exists_msg:     .ascii "File already exists.\n\r"
+exists_msg:     .ascii "File already exists.\r\n"
                 .byte 0
 
 imgmounted_msg: .ascii "Error: Image file '"
                 .byte 0
-imgmounted_msg2:.ascii "' already mounted.\n\r"
+imgmounted_msg2:.ascii "' already mounted.\r\n"
                 .byte 0
 
 warning_msg:    .ascii "Warning: About to delete file '"
                 .byte 0
-warning_msg2:   .ascii "'.\n"
+warning_msg2:   .ascii "'.\r\n"
                 .ascii "Press Y to proceed, anything else to cancel: "
                 .byte 0
 
 abort_msg:      .byte 13,10
-                .ascii "Aborted by user.\n\r"
+                .ascii "Aborted by user.\r\n"
                 .byte 10
 
-done_msg:       .ascii "Done.\n\r"
+done_msg:       .ascii "Done.\r\n"
                 .byte 0

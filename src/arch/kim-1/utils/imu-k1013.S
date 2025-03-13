@@ -741,35 +741,35 @@ disk_status:    .fill 8             ; Result phase readouts from NEC-765
 
     .global usage_msg
 
-usage_msg:      .ascii "Usage: imu [/L]\n\r"
-                .ascii "       imu /M <drive> [/O]\n\r"
-                .ascii "       imu /U <drive>\n\r"
-                .ascii "       imu /N <image> [/P]\n\r"
-                .ascii "       imu /D <image>\n\r"
-                .ascii "       imu {/C | /R} <src image> <dst image>\n\r\n\r"
+usage_msg:      .ascii "Usage: imu [/L]\r\n"
+                .ascii "       imu /M <drive> [/O]\r\n"
+                .ascii "       imu /U <drive>\r\n"
+                .ascii "       imu /N <image> [/P]\r\n"
+                .ascii "       imu /D <image>\r\n"
+                .ascii "       imu {/C | /R} <src image> <dst image>\r\n\r\n"
                 .byte 0
 
-fdc_msg:        .ascii "Unexpected floppy controller failure.\n\r"
+fdc_msg:        .ascii "Unexpected floppy controller failure.\r\n"
                 .byte 0
 
-real_msg:       .ascii "Not supported. Old firmware or real hardware.\n\r"
+real_msg:       .ascii "Not supported. Old firmware or real hardware.\r\n"
                 .byte 0
 
-diskfull_msg:   .ascii "SD card is full!\n\r"
+diskfull_msg:   .ascii "SD card is full!\r\n"
                 .byte 0
 
-imagerr_msg:    .ascii "Image name invalid or longer than 63 chars.\n\r"
+imagerr_msg:    .ascii "Image name invalid or longer than 63 chars.\r\n"
                 .byte 0
 
-open_msg:       .ascii "Failed to open directory.\n\r"
+open_msg:       .ascii "Failed to open directory.\r\n"
                 .byte 0
 
-readdir_msg:    .ascii "Failed to read directory.\n\r"
+readdir_msg:    .ascii "Failed to read directory.\r\n"
                 .byte 0
 
 invalidimg_msg: .ascii "Error: File '"
                 .byte 0
-invalidimg_msg2:.ascii "' is not a valid IMD image.\n\r"
+invalidimg_msg2:.ascii "' is not a valid IMD image.\r\n"
                 .byte 0
 
 
