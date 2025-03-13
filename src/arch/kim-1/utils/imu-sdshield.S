@@ -212,11 +212,12 @@ zproc mount_image
     sta zp_sds_buffer+0             ; is page aligned
     lda buffer1+1
     sta zp_sds_buffer+1
-    ldy #0
-    lda drive
-    sta (buffer1),y
-    iny
+    ldy #1
     lda ro_flag
+    sta (buffer1),y
+    tax
+    dey
+    lda drive
     sta (buffer1),y
 
     jsr DiskMount                   ; Mount image
