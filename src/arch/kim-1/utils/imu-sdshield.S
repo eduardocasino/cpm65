@@ -295,6 +295,8 @@ zproc save_config
         sec
     zendif
 
+    jsr inf_working                 ; It is a slow operation
+
     jsr SaveConfig
     zif_cs
         lda #<config_msg
@@ -377,6 +379,8 @@ zproc create_image
     zif_ne
         jmp err_usage               ; No more parameters expected
     zendif
+
+    jsr inf_working                 ; It is a slow operation
 
     ; Prepare the disk parameter block for format. Beware the fields
     ; in this file parameter block have different meaning for this
@@ -513,6 +517,7 @@ zproc copy_or_move_file
 
     lda rn_flag
     zif_eq
+        jsr inf_working             ; It is a slow operation
         jsr set_buffer              ; Set buffer for image name at buffer1
         jsr DiskCopy                ; Copy file
     zelse
@@ -526,6 +531,7 @@ zproc copy_or_move_file
             ldx filename1+1
             jmp err_imgmounted
         zendif
+        jsr inf_working             ; It is a slow operation
         jsr set_buffer              ; Set buffer for image name at buffer1
         jsr DiskRename              ; Move/rename
     zendif
@@ -571,6 +577,12 @@ zproc err_firmware
     jmp pr_str
 zendproc
 
+zproc inf_working
+    lda #<working_msg
+    ldx #>working_msg
+    jmp pr_str
+zendproc
+
     .data
 
 ; Messages
@@ -597,4 +609,7 @@ disabled_msg:   .ascii "Disabled by hardware. Please flip option switch 2.\r\n"
                 .byte 0
 
 config_msg:     .ascii "Can't update the SD config file.\r\n"
+                .byte 0
+
+working_msg:    .ascii "On it. May take a while...\r\n"
                 .byte 0
