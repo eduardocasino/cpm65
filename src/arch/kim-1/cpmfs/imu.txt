@@ -1,7 +1,7 @@
 Image Manipulation Utility
 ==========================
 
-Usage:  imu [/L]
+Usage:  imu [{/L | /S}]
         imu /M <drive> <image> [/O]
         imu /U <drive>
         imu /N <image> [/P]
@@ -14,6 +14,8 @@ Options
 -------
 
 /L      - Lists the available disk images on the SD card.
+
+/S      - Saves the current mounts to the SD card config file.
 
 /M <drive> <image> [/O]
         - Mounts <image> into <drive>. Option /O makes it read-only.
