@@ -609,8 +609,5 @@ imagerr_msg:    .ascii "Image name must be in 8.3 format.\r\n"
 disabled_msg:   .ascii "Disabled by hardware. Please flip option switch 2.\r\n"
                 .byte 0
 
-config_msg:     .ascii "Can't update the SD config file.\r\n"
-                .byte 0
-
 working_msg:    .ascii "On it. May take a while...\r\n"
                 .byte 0
