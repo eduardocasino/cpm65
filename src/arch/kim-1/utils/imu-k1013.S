@@ -392,7 +392,7 @@ zproc create_image
 
     ; Set buffer for sending mount info
 
-    lda #BUFFER_DMA
+    lda #DMA_AREA
     sta ADMA
 
     ; Prepare the command data
