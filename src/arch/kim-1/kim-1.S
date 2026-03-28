@@ -77,7 +77,24 @@ _start:
 
     ; BIOS initialisation.
 
-    jsr initdrivers
+    ; Detect if running on the KIM-1 simulator
+
+    ldy #11             ; Check 12 bytes (4 jump table entries)
+    zrepeat
+        lda $1500, y        ; Jump table location
+        cmp acia_sig,y      ; Compare to known data
+        bne 2f              ; No match: Not in KIM-1 Simulator
+        dey                 ; Check next
+    zuntil mi
+
+    ; Patch the TTY driver jump table
+
+    lda #<alt_const
+    sta jmptable_lo
+    lda #>alt_const
+    sta jmptable_hi
+
+2:  jsr initdrivers
 
     ; Open the BDOS file (using low level disk access).
 
@@ -99,6 +116,10 @@ _start:
     lda #<biosentry
     ldx #>biosentry
     jmp __TPA_START__ + COMHDR_ENTRY
+
+acia_sig:
+    ; First 12 bytes of the ACIA rom jump table
+    .byte $4c, $15, $15, $4c, $6e, $15, $4c, $86, $15, $4c, $b4, $15
 
 loading_msg:
     .byte 13, 10, 10
@@ -152,16 +173,16 @@ zproc tty_conin
     and #0xfe
     sta SBD
 
-    jsr _tty_bgetch
+    jsr GETCH
+
+1:  ldy #0
+    sty pending_key
 
     pha                 ; Restore echo
     lda SBD
     ora #1
     sta SBD
     pla
-
-1:  ldy #0
-    sty pending_key
 
     clc
     rts
@@ -197,17 +218,23 @@ zproc tty_const
     rts
 zendproc
 
-; Blocking tty read. Wait until char ready, then
-; put it into A
+; Alternate ACIA-based tty_const for the KIM-1 Simulator
 
-zproc _tty_bgetch
-    lda #1
-    zrepeat
-        bit SAD         ; Check start bit
-        bne 1f
-    zuntil pl
-    bpl _tty_getch      ; Always jump
-1:  lda #0
+zproc alt_const
+    lda pending_key
+    zif eq
+        lda ACIAS
+        and #$01            ; check check bit RDR
+        sta pending_key
+        zif eq
+            clc
+            rts
+        zendif
+        lda ACIAR
+    zendif
+
+    lda #0xff
+    clc
     rts
 zendproc
 
@@ -216,15 +243,10 @@ zendproc
 ; from the KIM-1 ROM
 
 zproc _tty_nbgetch
-    lda #1
     bit SAD             ; Check start bit
-    bne 1b
-    bmi 1b              ; No start bit
-zendproc
-;
-; Fall through
-;
-zproc _tty_getch
+    bne 1f
+    bmi 1f              ; No start bit
+
     ldx #8              ; Set up 8 bit count
     lda #1
     jsr DELAY           ; Delay 1 bit
@@ -242,6 +264,8 @@ zproc _tty_getch
     lda CHAR
     rol a               ; Shift off parity
     lsr a
+    rts
+1:  lda #0
     rts
 zendproc
 

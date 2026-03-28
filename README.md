@@ -392,7 +392,7 @@ the same time.
 
 ### KIM-1 with K-1013 FDC notes
 
-  - To run this on an KIM-1, you need an MTU K-1013 Floppy Disk Controller with an SSDD 8'' disk (or this [Pico based RAM/ROM/Video/FDC card](https://github.com/eduardocasino/kim-1-programmable-memory-card)) and full RAM upgrade, including the 0x0400-0x13ff memory hole.
+  - To run this on an KIM-1, you need an MTU K-1013 Floppy Disk Controller with an SSDD 8'' disk (or this [Pico based RAM/ROM/Video/FDC card](https://github.com/eduardocasino/kim-1-programmable-memory-card)) and full RAM upgrade, including the 0x0400-0x13ff memory hole.  It can also run on latest version of Hans Otten's KIM-1 Simulator enabling K-1013 emulation.
 
   - To use it, transfer the `diskimage.imd` image to an SSDD 8'' disk (or place it directly onto a FAT or exFAT formatted SD card and assign it to disk0 in the Pico card). Start the KIM-1 in TTY mode, load the `boot.pap` loader program into `0x0200` and execute it.
 
@@ -422,7 +422,7 @@ the same time.
 
 ### KIM-1 with Corsham's SD Shield notes
 
-  - For this port, you'll need an original Corsham's SD Shield, [a clone like this one](https://github.com/eduardocasino/sd-card-shield) or even this [Raspberry Pi Pico based variant](https://retro-spy.com/product/sd-card-system/).
+  - For this port, you'll need an original Corsham's SD Shield, [a clone like this one](https://github.com/eduardocasino/sd-card-shield) or even this [Raspberry Pi Pico based variant](https://retro-spy.com/product/sd-card-system/). It can also run on latest version of Hans Otten's KIM-1 Simulator enabling SD Card emulation.
 
   - Place the `CPM-BOOT.DSK` image at the root of a FAT32 formatted SD card and create an `SD.CFG`file with this content:
     ```

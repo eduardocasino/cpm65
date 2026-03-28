@@ -291,6 +291,7 @@ zproc unmount_drive
     
     ; Dig further for errors
 
+    lda disk_status                 ; Check for success
     and #ST4_ABNORMAL_TERM
     zif ne
         lda disk_status+1
@@ -314,13 +315,29 @@ zproc unmount_drive
     jmp inf_done
 zendproc
 
-; Update config to flash. Not yet supported
+; Update the SD config file with the latest mounted drives
+; situation. Issues warning if the file could not be
+; updated.
 ;
 zproc save_config
-    lda #<unknown_msg
-    ldy #>unknown_msg
-    jsr err_withchar
-    jmp err_usage
+
+    ldy #EXT_CMD_SAV
+    jsr fdc_exec_extended           ; Exec SD mounts config save
+    zif cs
+        lda #<fdc_msg
+        ldx #>fdc_msg
+        jmp err_withmsg             ; Controller error
+    zendif
+
+    lda disk_status                 ; Check for success
+    and #ST4_ABNORMAL_TERM
+    zif ne
+        lda #<config_msg
+        ldx #>config_msg
+        jmp err_withmsg
+    zendif
+
+    jmp inf_done
 zendproc
 
 ; Create an empty image on the SD card.
@@ -376,7 +393,7 @@ zproc create_image
 
     ; Set buffer for sending mount info
 
-    lda #BUFFER_DMA
+    lda #DMA_AREA
     sta ADMA
 
     ; Prepare the command data
@@ -425,7 +442,7 @@ zproc create_image
         zendif
         ; If we are here, there was an unexpected error
         lda #<generic_msg
-        ldy #>generic_msg
+        ldx #>generic_msg
         jmp err_withmsg
     zendif
 
@@ -493,7 +510,7 @@ zproc delete_file
         zendif
         ; If we are here, there was an unexpected error
         lda #<generic_msg
-        ldy #>generic_msg
+        ldx #>generic_msg
         jmp err_withmsg
     zendif
 
@@ -594,7 +611,7 @@ zproc copy_or_move_file
         zendif
         ; If we are here, there was an unexpected error
         lda #<generic_msg
-        ldy #>generic_msg
+        ldx #>generic_msg
         jmp err_withmsg
     zendif
 
@@ -741,7 +758,7 @@ disk_status:    .fill 8             ; Result phase readouts from NEC-765
 
     .global usage_msg
 
-usage_msg:      .ascii "Usage: imu [/L]\r\n"
+usage_msg:      .ascii "Usage: imu [{/L | /S}]\r\n"
                 .ascii "       imu /M <drive> [/O]\r\n"
                 .ascii "       imu /U <drive>\r\n"
                 .ascii "       imu /N <image> [/P]\r\n"

@@ -591,7 +591,7 @@ zendproc
     .global usage_msg
 
 usage_msg:      .ascii "Usage: imu [{/L | /S}]\r\n"
-                .ascii "       imu /M <drive> [/O]\r\n"
+                .ascii "       imu /M <drive> <image> [/O]\r\n"
                 .ascii "       imu /U <drive>\r\n"
                 .ascii "       imu {/N | /D} <image>\r\n"
                 .ascii "       imu {/C | /R} <src image> <dst image>\r\n\r\n"
@@ -607,9 +607,6 @@ imagerr_msg:    .ascii "Image name must be in 8.3 format.\r\n"
                 .byte 0
 
 disabled_msg:   .ascii "Disabled by hardware. Please flip option switch 2.\r\n"
-                .byte 0
-
-config_msg:     .ascii "Can't update the SD config file.\r\n"
                 .byte 0
 
 working_msg:    .ascii "On it. May take a while...\r\n"

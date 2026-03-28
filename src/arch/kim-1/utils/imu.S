@@ -481,6 +481,7 @@ zendproc
 
     .global unknown_msg, invalid_msg, mounterr_msg, mountederr_msg
     .global unmnterr_msg, notmntederr_msg, generic_msg, exists_msg
+    .global config_msg
 
 error_msg:      .ascii "Error: "
                 .byte 0
@@ -529,6 +530,9 @@ exists_msg:     .ascii "File already exists.\r\n"
 imgmounted_msg: .ascii "Error: Image file '"
                 .byte 0
 imgmounted_msg2:.ascii "' already mounted.\r\n"
+                .byte 0
+
+config_msg:     .ascii "Can't update the SD config file.\r\n"
                 .byte 0
 
 warning_msg:    .ascii "Warning: About to delete file '"
