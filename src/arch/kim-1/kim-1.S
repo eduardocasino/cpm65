@@ -178,6 +178,11 @@ zproc tty_conin
 1:  ldy #0
     sty pending_key
 
+    cmp #8
+    zif eq
+        lda #127
+    zendif
+
     pha                 ; Restore echo
     lda SBD
     ora #1
@@ -225,14 +230,13 @@ zproc alt_const
     zif eq
         lda ACIAS
         and #$01            ; check check bit RDR
-        sta pending_key
         zif eq
             clc
             rts
         zendif
         lda ACIAR
     zendif
-
+    sta pending_key
     lda #0xff
     clc
     rts
